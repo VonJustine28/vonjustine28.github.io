@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HollyFit | Coach Kyle Holland</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --card: #181818;
+    --border: #2a2a2a;
+    --accent: #f5a623;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #888;
+    --bot-bubble: #1e1e1e;
+    --user-bubble: #f5a623;
+    --user-text: #0a0a0a;
+    --glow: rgba(245,166,35,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(245,166,35,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(255,107,53,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrapper {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+  }
+  .header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand-row { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive; font-size: 18px; color: #000;
+    flex-shrink: 0; position: relative;
+  }
+  .avatar::after {
+    content: ''; position: absolute;
+    width: 10px; height: 10px; background: #22c55e;
+    border-radius: 50%; bottom: 1px; right: 1px;
+    border: 2px solid var(--bg);
+  }
+  .brand-info h1 {
+    font-family: 'Bebas Neue', cursive; font-size: 20px;
+    letter-spacing: 2px; color: var(--accent); line-height: 1;
+  }
+  .brand-info p { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 0.5px; margin-top: 2px; }
+  .handle {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--accent); background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.3); padding: 4px 8px; border-radius: 20px;
+  }
+  .chat {
+    flex: 1; padding: 20px 16px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth;
+  }
+  .chat::-webkit-scrollbar { width: 4px; }
+  .chat::-webkit-scrollbar-track { background: transparent; }
+  .chat::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .msg { display: flex; gap: 8px; animation: fadeUp 0.3s ease; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg.bot { align-items: flex-end; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive; font-size: 13px; color: #000;
+    flex-shrink: 0; margin-bottom: 2px;
+  }
+  .bubble {
+    max-width: 78%; padding: 12px 16px; border-radius: 18px;
+    font-size: 14px; line-height: 1.55;
+  }
+  .msg.bot .bubble {
+    background: var(--bot-bubble); border: 1px solid var(--border);
+    border-bottom-left-radius: 4px; color: var(--text);
+  }
+  .msg.user .bubble {
+    background: var(--user-bubble); color: var(--user-text);
+    border-bottom-right-radius: 4px; font-weight: 500;
+  }
+  .bubble strong { color: var(--accent); }
+  .msg.user .bubble strong { color: #0a0a0a; }
+  .typing-dots {
+    display: flex; gap: 4px; align-items: center;
+    padding: 14px 18px; background: var(--bot-bubble);
+    border: 1px solid var(--border); border-radius: 18px;
+    border-bottom-left-radius: 4px; width: fit-content;
+  }
+  .dot {
+    width: 6px; height: 6px; background: var(--muted);
+    border-radius: 50%; animation: bounce 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 0 16px 12px 56px;
+    animation: fadeUp 0.4s ease 0.1s both;
+  }
+  .chip {
+    padding: 8px 16px; background: transparent;
+    border: 1px solid var(--accent); border-radius: 24px;
+    color: var(--accent); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .chip:hover {
+    background: var(--accent); color: #000;
+    transform: translateY(-1px); box-shadow: 0 4px 16px var(--glow);
+  }
+  .confirm-btn {
+    display: block; width: calc(100% - 32px);
+    margin: 0 16px 16px 56px; padding: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 14px; cursor: pointer;
+    font-family: 'Bebas Neue', cursive; font-size: 20px;
+    letter-spacing: 2px; color: #000;
+    box-shadow: 0 4px 24px rgba(245,166,35,0.35);
+    transition: all 0.2s; animation: fadeUp 0.4s ease;
+  }
+  .confirm-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,166,35,0.5); }
+  .confirm-btn:active { transform: scale(0.98); }
+  .input-area {
+    padding: 16px; background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px); border-top: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: center;
+  }
+  .input-wrap {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 28px; display: flex; align-items: center;
+    padding: 0 16px; transition: border-color 0.2s;
+  }
+  .input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
+  #userInput {
+    background: transparent; border: none; outline: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; flex: 1; padding: 13px 0;
+    resize: none; min-height: 20px; max-height: 100px;
+  }
+  #userInput::placeholder { color: var(--muted); }
+  #sendBtn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+    box-shadow: 0 2px 12px rgba(245,166,35,0.3);
+  }
+  #sendBtn:hover { transform: scale(1.08); box-shadow: 0 4px 20px rgba(245,166,35,0.5); }
+  #sendBtn:active { transform: scale(0.95); }
+  #sendBtn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  #sendBtn svg { width: 18px; height: 18px; fill: #000; }
+  .day-divider {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted); font-size: 11px;
+    font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  }
+  .day-divider::before, .day-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .completion-banner {
+    background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(245,166,35,0.08));
+    border: 1px solid rgba(34,197,94,0.3); border-radius: 16px;
+    padding: 24px; text-align: center;
+  }
+  .completion-banner .check { font-size: 40px; margin-bottom: 10px; }
+  .completion-banner h3 {
+    font-family: 'Bebas Neue', cursive; font-size: 24px;
+    letter-spacing: 2px; color: #22c55e;
+  }
+  .completion-banner p { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .completion-banner .email-highlight { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="brand-row">
+      <div class="avatar">KH</div>
+      <div class="brand-info">
+        <h1>HollyFit</h1>
+        <p>Coach Kyle Holland · Online Coaching</p>
+      </div>
+      <div class="handle">@juliuspeptides</div>
+    </div>
+  </div>
+  <div class="chat" id="chat">
+    <div class="day-divider">Today</div>
+  </div>
+  <div id="chipsContainer"></div>
+  <div class="input-area">
+    <div class="input-wrap">
+      <textarea id="userInput" placeholder="Type your message..." rows="1"></textarea>
+    </div>
+    <button id="sendBtn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are Von, the HollyFit intake assistant for Coach Kyle Holland (@juliuspeptides). Your job is to warmly greet leads, introduce Coach Kyle, and get them to confirm they want to join the program.
+
+ABOUT COACH KYLE HOLLAND:
+- Online fitness and body recomposition coach based in the US
+- Specializes in body transformation, muscle building, fat loss, and performance optimization
+- Uses a science-backed personalized approach combining training + nutrition + peptide protocols
+- Instagram: @juliuspeptides
+- Program cost: $250/month — includes custom training program, nutrition plan, peptide guidance, and 1Fit app access
+- All coaching delivered through the 1Fit app by 1FitUK
+- Known for real measurable results with a no-BS approach
+- Contact: coachkholly@gmail.com
+
+YOUR GOAL IN THIS CONVERSATION:
+1. Warmly greet and introduce Coach Kyle and the program
+2. Answer any questions they have about the program honestly
+3. Confirm they are genuinely interested in joining
+4. Confirm they are okay with the $250/month program fee
+5. Ask for their first name and email address only
+6. Once you have their name, email, and they have confirmed interest AND confirmed the fee — output EXACTLY this on its own line and nothing after:
+   CONFIRMED:{"name":"...","email":"..."}
+
+RULES:
+- Keep it conversational and warm — one or two sentences at a time
+- NEVER discuss peptide dosing, protocols, or medical advice — say Kyle handles all protocols personally
+- NEVER discuss cancellations or refunds — direct to coachkholly@gmail.com
+- Do NOT ask for any other information — name and email only
+- Make sure they explicitly confirm the $250/month fee before outputting CONFIRMED
+- Use light emojis to keep the vibe energetic but professional`;
+
+let conversationHistory = [];
+let isTyping = false;
+let confirmedData = null;
+
+function scrollToBottom() {
+  const chat = document.getElementById('chat');
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function formatText(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+function addMessage(role, text) {
+  const chat = document.getElementById('chat');
+  const isUser = role === 'user';
+
+  const confirmedMatch = text.match(/CONFIRMED:(\{[^}]+\})/);
+  if (confirmedMatch) {
+    try {
+      confirmedData = JSON.parse(confirmedMatch[1]);
+      text = text.replace(/CONFIRMED:\{[^}]+\}/, '').trim();
+    } catch(e) { console.error('Parse error', e); }
+  }
+
+  if (text) {
+    const msg = document.createElement('div');
+    msg.className = `msg ${isUser ? 'user' : 'bot'}`;
+    if (!isUser) {
+      const av = document.createElement('div');
+      av.className = 'msg-avatar';
+      av.textContent = 'V';
+      msg.appendChild(av);
+    }
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = formatText(text);
+    msg.appendChild(bubble);
+    chat.appendChild(msg);
+  }
+
+  if (confirmedData) {
+    showConfirmButton();
+  }
+
+  scrollToBottom();
+}
+
+function showTyping() {
+  const chat = document.getElementById('chat');
+  const msg = document.createElement('div');
+  msg.className = 'msg bot';
+  msg.id = 'typing';
+  const av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = 'V';
+  msg.appendChild(av);
+  const dots = document.createElement('div');
+  dots.className = 'typing-dots';
+  dots.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  msg.appendChild(dots);
+  chat.appendChild(msg);
+  scrollToBottom();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+function showChips(options) {
+  const container = document.getElementById('chipsContainer');
+  container.innerHTML = '';
+  if (!options || !options.length) return;
+  const chips = document.createElement('div');
+  chips.className = 'chips';
+  options.forEach(opt => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = opt;
+    chip.onclick = () => { container.innerHTML = ''; sendMessage(opt); };
+    chips.appendChild(chip);
+  });
+  container.appendChild(chips);
+}
+
+function showConfirmButton() {
+  const container = document.getElementById('chipsContainer');
+  container.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'confirm-btn';
+  btn.textContent = "✅  I'M IN — LET'S GO";
+  btn.onclick = handleConfirm;
+  container.appendChild(btn);
+}
+
+async function handleConfirm() {
+  const container = document.getElementById('chipsContainer');
+  container.innerHTML = '';
+  document.getElementById('userInput').disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  const chat = document.getElementById('chat');
+  const card = document.createElement('div');
+  card.className = 'completion-banner';
+  card.innerHTML = `
+    <div class="check">🔥</div>
+    <h3>Welcome to HollyFit, ${confirmedData?.name || 'Champ'}!</h3>
+    <p>You're officially on Kyle's radar.<br>
+    Check <span class="email-highlight">${confirmedData?.email || 'your inbox'}</span> — 
+    Von will be sending you everything you need to get started shortly.</p>
+  `;
+  chat.appendChild(card);
+  scrollToBottom();
+
+  // Fire Make.com webhook
+  const MAKE_WEBHOOK_URL = "https://hook.us1.make.com/YOUR_WEBHOOK_ID_HERE";
+  try {
+    await fetch(MAKE_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: confirmedData.name,
+        email: confirmedData.email,
+        source: "HollyFit Bot",
+        confirmed_at: new Date().toISOString(),
+        program: "HollyFit Coaching — $250/month",
+        tasks: [
+          "Send About the Coach email + Google Form link",
+          "Google Form completed by client",
+          "Add client to 1Fit App",
+          "Create UPS Shipment"
+        ]
+      })
+    });
+  } catch(err) {
+    console.error("Webhook error:", err);
+  }
+}
+
+async function sendMessage(text) {
+  if (!text.trim() || isTyping) return;
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+  document.getElementById('userInput').value = '';
+  document.getElementById('chipsContainer').innerHTML = '';
+  isTyping = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || `API error ${response.status}`);
+    }
+
+    const reply = data.content?.[0]?.text || "Something went wrong — please try again!";
+    removeTyping();
+    addMessage('bot', reply);
+    conversationHistory.push({ role: 'assistant', content: reply });
+
+    const lower = reply.toLowerCase();
+    if (conversationHistory.length <= 2) {
+      showChips(["Yes, I'm interested! 🔥", "Tell me more first", "What's included?"]);
+    } else if (lower.includes('goal') || lower.includes('looking to')) {
+      showChips(["Lose body fat", "Build muscle", "Body recomposition", "Athletic performance"]);
+    } else if (lower.includes('250') || lower.includes('fee') || lower.includes('okay with')) {
+      showChips(["Yes, $250/month works for me ✅", "Tell me more about what's included"]);
+    }
+
+  } catch(err) {
+    removeTyping();
+    addMessage('bot', "Oops — hit a snag! Try refreshing the page or email us at **coachkholly@gmail.com** 💪");
+    console.error("API Error:", err);
+  }
+
+  isTyping = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+document.getElementById('sendBtn').onclick = () => sendMessage(document.getElementById('userInput').value);
+document.getElementById('userInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(e.target.value); }
+});
+document.getElementById('userInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+
+async function initBot() {
+  showTyping();
+  await new Promise(r => setTimeout(r, 1200));
+  removeTyping();
+  const greeting = `Hey! 👋 Welcome to **HollyFit** — I'm Von, Coach Kyle's assistant.\n\nCoach Kyle Holland is an online transformation coach who gets real results through personalized training, nutrition, and peptide protocols. 💪\n\nAre you interested in learning how the program could work for you?`;
+  addMessage('bot', greeting);
+  conversationHistory.push({ role: 'assistant', content: greeting });
+  setTimeout(() => showChips(["Yes, I'm interested! 🔥", "Tell me more first", "What's included?"]), 400);
+}
+
+initBot();
+</script>
+</body>
+</html>

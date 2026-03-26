@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HollyFit | Coach Kyle Holland</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --accent: #3b82f6;
+    --accent2: #6366f1;
+    --accent3: #06b6d4;
+    --text: #f0f0f0;
+    --muted: #6b7280;
+    --glow: rgba(59,130,246,0.18);
+    --glow2: rgba(99,102,241,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 16px 60px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 15% 15%, rgba(59,130,246,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(99,102,241,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Animated orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatOrb 8s ease-in-out infinite;
+  }
+
+  .orb1 {
+    width: 300px; height: 300px;
+    background: var(--accent);
+    top: -80px; left: -80px;
+    animation-delay: 0s;
+  }
+
+  .orb2 {
+    width: 250px; height: 250px;
+    background: var(--accent2);
+    bottom: -60px; right: -60px;
+    animation-delay: -4s;
+  }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Profile */
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .avatar-ring {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    padding: 3px;
+    margin-bottom: 16px;
+    animation: spinRing 4s linear infinite;
+    position: relative;
+  }
+
+  @keyframes spinRing {
+    0% { background: linear-gradient(0deg, var(--accent), var(--accent2), var(--accent3)); }
+    33% { background: linear-gradient(120deg, var(--accent2), var(--accent3), var(--accent)); }
+    66% { background: linear-gradient(240deg, var(--accent3), var(--accent), var(--accent2)); }
+    100% { background: linear-gradient(360deg, var(--accent), var(--accent2), var(--accent3)); }
+  }
+
+  .avatar-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+
+  .profile-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 30px;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #fff 40%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .profile-handle {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .profile-bio {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 300px;
+  }
+
+  .profile-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .ptag {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 24px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* Links */
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .link-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .link-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .link-btn:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--glow);
+  }
+
+  .link-btn:hover::before { opacity: 0.06; }
+  .link-btn:active { transform: scale(0.98); }
+
+  /* Primary CTA */
+  .link-btn.primary {
+    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(99,102,241,0.08));
+    border-color: rgba(59,130,246,0.35);
+    padding: 20px;
+  }
+
+  .link-btn.primary:hover {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(99,102,241,0.14));
+    box-shadow: 0 12px 40px var(--glow);
+  }
+
+  .link-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.25s;
+  }
+
+  .link-btn:hover .link-icon {
+    background: rgba(59,130,246,0.18);
+    border-color: rgba(59,130,246,0.4);
+  }
+
+  .link-btn.primary .link-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    font-size: 20px;
+  }
+
+  .link-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .link-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  .link-btn.primary .link-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #fff;
+  }
+
+  .link-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .link-btn.primary .link-sub { color: rgba(255,255,255,0.6); }
+
+  .link-arrow {
+    font-size: 16px;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s;
+  }
+
+  .link-btn:hover .link-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider span {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  /* Social row */
+  .social-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 36px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* Pulse badge */
+  .pulse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 24px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #22c55e;
+    font-family: 'Space Mono', monospace;
+    margin-top: 10px;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* Entry animation */
+  .link-btn {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .link-btn:nth-child(1) { animation-delay: 0.05s; }
+  .link-btn:nth-child(2) { animation-delay: 0.1s; }
+  .link-btn:nth-child(3) { animation-delay: 0.15s; }
+  .link-btn:nth-child(4) { animation-delay: 0.2s; }
+  .link-btn:nth-child(5) { animation-delay: 0.25s; }
+
+  .social-row .link-btn:nth-child(1) { animation-delay: 0.3s; }
+  .social-row .link-btn:nth-child(2) { animation-delay: 0.35s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .profile { animation: fadeUp 0.5s ease both; }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="wrapper">
+
+  <!-- Profile -->
+  <div class="profile">
+    <div class="avatar-ring">
+      <div class="avatar-inner">KH</div>
+    </div>
+    <div class="profile-name">COACH KYLE HOLLAND</div>
+    <div class="profile-handle">@juliuspeptides</div>
+    <div class="profile-bio">Online Transformation Coach 💪<br>Training · Nutrition · Peptide Protocols</div>
+    <div class="profile-tags">
+      <div class="ptag">💊 Peptides</div>
+      <div class="ptag">🏋️ Training</div>
+      <div class="ptag">🥗 Nutrition</div>
+      <div class="ptag">📱 1Fit App</div>
+    </div>
+    <div class="pulse-badge">
+      <div class="pulse-dot"></div>
+      TAKING NEW CLIENTS
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div class="links">
+
+    <!-- Primary CTA -->
+    <a href="#" class="link-btn primary">
+      <div class="link-icon">🔥</div>
+      <div class="link-content">
+        <div class="link-title">READY TO TRANSFORM? — START HERE</div>
+        <div class="link-sub">Chat with Von · Kyle's AI assistant</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- Application Form -->
+    <a href="#" class="link-btn">
+      <div class="link-icon">📋</div>
+      <div class="link-content">
+        <div class="link-title">Coaching Application Form</div>
+        <div class="link-sub">Fill out your full intake questionnaire</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- About the Program -->
+    <a href="#" class="link-btn">
+      <div class="link-icon">💊</div>
+      <div class="link-content">
+        <div class="link-title">What's Inside HollyFit Coaching?</div>
+        <div class="link-sub">$250/month · Everything that's included</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- Client Results -->
+    <a href="#" class="link-btn">
+      <div class="link-icon">📸</div>
+      <div class="link-content">
+        <div class="link-title">Real Client Results</div>
+        <div class="link-sub">See what's possible with HollyFit</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <div class="divider"><span>FOLLOW KYLE</span></div>
+
+    <!-- Social row -->
+    <div class="social-row">
+      <a href="https://www.instagram.com/juliuspeptides" target="_blank" class="link-btn">
+        <div class="link-icon">📱</div>
+        <div class="link-content">
+          <div class="link-title">Instagram</div>
+          <div class="link-sub">@juliuspeptides</div>
+        </div>
+      </a>
+      <a href="https://www.tiktok.com/@juliuspeptides" target="_blank" class="link-btn">
+        <div class="link-icon">🎵</div>
+        <div class="link-content">
+          <div class="link-title">TikTok</div>
+          <div class="link-sub">@juliuspeptides</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="divider"><span>CONTACT</span></div>
+
+    <!-- Email -->
+    <a href="/cdn-cgi/l/email-protection#a3c0ccc2c0cbc8cbcccfcfdae3c4cec2cacf8dc0ccce" class="link-btn">
+      <div class="link-icon">📧</div>
+      <div class="link-content">
+        <div class="link-title">Got Questions? Email Us</div>
+        <div class="link-sub"><span class="__cf_email__" data-cfemail="e98a86888a81828186858590a98e84888085c78a8684">[email&#160;protected]</span></div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <div>© 2026 HOLLYFIT · COACH KYLE HOLLAND</div>
+   
