@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HollyFit | Client Intake Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --accent: #3b82f6;
+    --accent2: #6366f1;
+    --accent3: #06b6d4;
+    --text: #f0f0f0;
+    --muted: #6b7280;
+    --glow: rgba(59,130,246,0.15);
+    --success: #22c55e;
+    --danger: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 16px 60px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 15%, rgba(59,130,246,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(99,102,241,0.05) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 44px;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .header-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 24px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .progress-count {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  .step-dots {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .sdot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+  }
+
+  .sdot-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .sdot.active .sdot-circle {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.1);
+    color: var(--accent);
+  }
+
+  .sdot.done .sdot-circle {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+    color: var(--success);
+    font-size: 12px;
+  }
+
+  .sdot-label {
+    font-size: 9px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* Section */
+  .section {
+    display: none;
+    animation: fadeUp 0.35s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    margin-bottom: 22px;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 30px;
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .section-title span { color: var(--accent); }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 7px;
+    line-height: 1.6;
+  }
+
+  /* Fields */
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 7px;
+    letter-spacing: 0.2px;
+  }
+
+  .field label .req { color: var(--accent); margin-left: 3px; }
+
+  .field label .hint {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--glow);
+  }
+
+  .field input.error,
+  .field textarea.error,
+  .field select.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
+  }
+
+  .field textarea { resize: vertical; min-height: 88px; }
+
+  .err-msg {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 5px;
+    display: none;
+  }
+  .err-msg.show { display: block; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 420px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Option cards */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .options-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  .opt-card { position: relative; }
+
+  .opt-card input {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+
+  .opt-card label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    transition: all 0.2s;
+    margin: 0;
+  }
+
+  .opt-card input:checked + label {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    color: var(--text);
+  }
+
+  .opt-card label:hover {
+    border-color: rgba(59,130,246,0.35);
+    color: var(--text);
+  }
+
+  .opt-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .opt-card input:checked + label .opt-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .opt-card input:checked + label .opt-dot::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  /* Nav */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .btn-back {
+    padding: 13px 22px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-next {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 19px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.25);
+  }
+
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,0.4); }
+  .btn-next:active { transform: scale(0.98); }
+
+  .btn-submit {
+    flex: 1;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--success), #16a34a);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(34,197,94,0.25);
+  }
+
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,0.4); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Success */
+  #successScreen {
+    display: none;
+    text-align: center;
+    padding: 48px 20px;
+    animation: fadeUp 0.5s ease;
+  }
+
+  .success-icon { font-size: 58px; margin-bottom: 18px; }
+
+  .success-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 38px;
+    letter-spacing: 4px;
+    color: var(--success);
+    margin-bottom: 12px;
+  }
+
+  .success-sub {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 360px;
+    margin: 0 auto 24px;
+  }
+
+  .success-sub strong { color: var(--accent); }
+
+  .success-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .success-tag {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 24px;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: var(--success);
+    font-family: 'Space Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">HollyFit</div>
+    <div class="header-sub">Coach Kyle Holland · Client Intake Form</div>
+    <div class="header-badge">📋 Takes about 3 minutes to complete</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-top">
+      <div class="progress-label">PROGRESS</div>
+      <div class="progress-count" id="progressCount">STEP 1 OF 4</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:25%"></div>
+    </div>
+    <div class="step-dots">
+      <div class="sdot active" id="dot1">
+        <div class="sdot-circle">1</div>
+        <div class="sdot-label">CONTACT</div>
+      </div>
+      <div class="sdot" id="dot2">
+        <div class="sdot-circle">2</div>
+        <div class="sdot-label">GOALS</div>
+      </div>
+      <div class="sdot" id="dot3">
+        <div class="sdot-circle">3</div>
+        <div class="sdot-label">HEALTH</div>
+      </div>
+      <div class="sdot" id="dot4">
+        <div class="sdot-circle">4</div>
+        <div class="sdot-label">CURRENT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: CONTACT -->
+  <div class="section active" id="section1">
+    <div class="section-header">
+      <div class="section-tag">STEP 01 — CONTACT DETAILS</div>
+      <div class="section-title">Nice to <span>meet you</span></div>
+      <div class="section-desc">Just the basics so Kyle's team can follow up with you directly.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label>Full Name <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="John Smith">
+        <div class="err-msg" id="nameErr">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="john@email.com">
+        <div class="err-msg" id="emailErr">Please enter a valid email</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label>Age <span class="req">*</span></label>
+        <input type="number" id="age" placeholder="28" min="18" max="99">
+        <div class="err-msg" id="ageErr">Please enter your age</div>
+      </div>
+      <div class="field">
+        <label>Gender <span class="req">*</span></label>
+        <select id="gender">
+          <option value="" disabled selected>Select</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Prefer not to say</option>
+        </select>
+        <div class="err-msg" id="genderErr">Please select your gender</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Location & Timezone <span class="req">*</span></label>
+      <input type="text" id="location" placeholder="e.g. Dallas, TX — CST">
+      <div class="err-msg" id="locationErr">Please enter your location</div>
+    </div>
+
+    <div class="field">
+      <label>How did you find Coach Kyle?<span class="req">*</span></label>
+      <select id="referral">
+        <option value="" disabled selected>Select one</option>
+        <option>Instagram</option>
+        <option>TikTok</option>
+        <option>Friend or referral</option>
+        <option>YouTube</option>
+        <option>Other</option>
+      </select>
+      <div class="err-msg" id="referralErr">Please select an option</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-next" onclick="goTo(2)">NEXT — YOUR GOALS →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: GOALS -->
+  <div class="section" id="section2">
+    <div class="section-header">
+      <div class="section-tag">STEP 02 — YOUR GOALS</div>
+      <div class="section-title">What are you <span>working towards?</span></div>
+      <div class="section-desc">Help Kyle understand what you want to achieve so he can build the right plan.</div>
+    </div>
+
+    <div class="field">
+      <label>Primary Fitness Goal <span class="req">*</span></label>
+      <div class="options-grid">
+        <div class="opt-card">
+          <input type="radio" name="goal" id="g1" value="Lose Body Fat">
+          <label for="g1"><div class="opt-dot"></div>Lose Body Fat</label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="goal" id="g2" value="Build Muscle">
+          <label for="g2"><div class="opt-dot"></div>Build Muscle</label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="goal" id="g3" value="Body Recomposition">
+          <label for="g3"><div class="opt-dot"></div>Body Recomp</label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="goal" id="g4" value="Athletic Performance">
+          <label for="g4"><div class="opt-dot"></div>Performance</label>
+        </div>
+      </div>
+      <div class="err-msg" id="goalErr">Please select your primary goal</div>
+    </div>
+
+    <div class="field">
+      <label>Describe your goal in your own words <span class="req">*</span>
+        <span class="hint">Be as specific as possible — this helps Kyle personalize your program</span>
+      </label>
+      <textarea id="goalDesc" placeholder="e.g. I want to lose around 20 lbs and build a lean, athletic physique. I've struggled to stay consistent in the past..."></textarea>
+      <div class="err-msg" id="goalDescErr">Please describe your goal</div>
+    </div>
+
+    <div class="field">
+      <label>Current Training Experience <span class="req">*</span></label>
+      <div class="options-grid three">
+        <div class="opt-card">
+          <input type="radio" name="exp" id="e1" value="Beginner (under 1 year)">
+          <label for="e1"><div class="opt-dot"></div>Beginner<br><small style="color:var(--muted);font-size:11px">under 1yr</small></label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="exp" id="e2" value="Intermediate (1-3 years)">
+          <label for="e2"><div class="opt-dot"></div>Intermediate<br><small style="color:var(--muted);font-size:11px">1–3 years</small></label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="exp" id="e3" value="Advanced (3+ years)">
+          <label for="e3"><div class="opt-dot"></div>Advanced<br><small style="color:var(--muted);font-size:11px">3+ years</small></label>
+        </div>
+      </div>
+      <div class="err-msg" id="expErr">Please select your experience level</div>
+    </div>
+
+    <div class="field">
+      <label>What's held you back from your goals before? <span class="req">*</span></label>
+      <textarea id="blocker" placeholder="e.g. No accountability, inconsistent diet, not knowing what program to follow..."></textarea>
+      <div class="err-msg" id="blockerErr">Please answer this question</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(1)">← BACK</button>
+      <button class="btn-next" onclick="goTo(3)">NEXT — HEALTH INFO →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: HEALTH BACKGROUND -->
+  <div class="section" id="section3">
+    <div class="section-header">
+      <div class="section-tag">STEP 03 — HEALTH BACKGROUND</div>
+      <div class="section-title">General <span>Health Info</span></div>
+      <div class="section-desc">General background only — no medical records needed. This helps Kyle build a safe and effective program for you.</div>
+    </div>
+
+    <div class="field">
+      <label>Overall health status <span class="req">*</span></label>
+      <div class="options-grid three">
+        <div class="opt-card">
+          <input type="radio" name="health" id="h1" value="Excellent">
+          <label for="h1"><div class="opt-dot"></div>Excellent</label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="health" id="h2" value="Good">
+          <label for="h2"><div class="opt-dot"></div>Good</label>
+        </div>
+        <div class="opt-card">
+          <input type="radio" name="health" id="h3" value="Fair">
+          <label for="h3"><div class="opt-dot"></div>Fair</label>
+        </div>
+      </div>
+      <div class="err-msg" id="healthErr">Please select your health status</div>
+    </div>
+
+    <div class="field">
+      <label>Any injuries or physical limitations?
+        <span class="hint">Type "None" if not applicable</span>
+      </label>
+      <input type="text" id="injuries" placeholder="e.g. Lower back tightness, old knee injury, shoulder impingement...">
+    </div>
+
+    <div class="field">
+      <label>Current sleep quality
+      </label>
+      <select id="sleep">
+        <option value="" disabled selected>Select</option>
+        <option>Great — 7-9 hours consistently</option>
+        <option>Okay — 6-7 hours most nights</option>
+        <option>Poor — under 6 hours or broken sleep</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Current stress levels</label>
+      <select id="stress">
+        <option value="" disabled selected>Select</option>
+        <option>Low — generally relaxed</option>
+        <option>Moderate — manageable day to day</option>
+        <option>High — regularly stressed</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Anything else about your health Kyle should know before building your program?
+        <span class="hint">Optional but helpful — keep it general</span>
+      </label>
+      <textarea id="healthNotes" placeholder="e.g. I had surgery on my shoulder 2 years ago, fully recovered. I have a desk job so I sit most of the day..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(2)">← BACK</button>
+      <button class="btn-next" onclick="goTo(4)">NEXT — CURRENT ROUTINE →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: CURRENT PROTOCOLS -->
+  <div class="section" id="section4">
+    <div class="section-header">
+      <div class="section-tag">STEP 04 — CURRENT ROUTINE</div>
+      <div class="section-title">What are you <span>doing now?</span></div>
+      <div class="section-desc">Tell Kyle what you're currently doing so he can build around it intelligently.</div>
+    </div>
+
+    <div class="field">
+      <label>Current weekly training routine <span class="req">*</span></label>
+      <textarea id="routine" placeholder="e.g. I go to the gym 3x a week. Mostly chest and arms, no real structure. 45 min sessions..."></textarea>
+      <div class="err-msg" id="routineErr">Please describe your current routine</div>
+    </div>
+
+    <div class="field">
+      <label>Current nutrition habits <span class="req">*</span></label>
+      <textarea id="nutrition" placeholder="e.g. I eat fairly clean during the week but fall off on weekends. I don't currently track calories or macros..."></textarea>
+      <div class="err-msg" id="nutritionErr">Please describe your nutrition habits</div>
+    </div>
+
+    <div class="field">
+      <label>Supplements or protocols you are currently taking
+        <span class="hint">List anything you're currently using — e.g. protein powder, creatine, vitamins, or any other protocols</span>
+      </label>
+      <textarea id="supplements" placeholder="e.g. Whey protein, creatine 5g daily, vitamin D, fish oil. Currently running a wellness protocol I found online..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Anything else you'd like Coach Kyle to know?</label>
+      <textarea id="extraNotes" placeholder="e.g. I travel often for work, I have limited gym access on weekends, I'm highly motivated and ready to commit..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(3)">← BACK</button>
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">✅ SUBMIT APPLICATION</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="successScreen">
+    <div class="success-icon">💪</div>
+    <div class="success-title">APPLICATION RECEIVED!</div>
+    <div class="success-sub">
+      Thanks <strong id="successName">champ</strong> — you're on Kyle's radar now.<br>
+      His team will review your profile and reach out to you at <strong>coachkholly@gmail.com</strong> within 24 hours.
+    </div>
+    <div class="success-tags">
+      <div class="success-tag">✅ Form Submitted</div>
+      <div class="success-tag">📋 Notion Task Created</div>
+      <div class="success-tag">📧 Kyle Notified</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+const progressSteps = ['25%','50%','75%','100%'];
+
+function goTo(step) {
+  if (step > currentStep && !validate(currentStep)) return;
+
+  const prevDot = document.getElementById(`dot${currentStep}`);
+  if (step > currentStep) {
+    prevDot.classList.remove('active');
+    prevDot.classList.add('done');
+    prevDot.querySelector('.sdot-circle').textContent = '✓';
+  } else {
+    prevDot.classList.remove('active', 'done');
+    prevDot.querySelector('.sdot-circle').textContent = currentStep;
+  }
+
+  document.getElementById(`section${currentStep}`).classList.remove('active');
+  currentStep = step;
+  document.getElementById(`section${currentStep}`).classList.add('active');
+
+  const newDot = document.getElementById(`dot${currentStep}`);
+  newDot.classList.add('active');
+  newDot.classList.remove('done');
+  newDot.querySelector('.sdot-circle').textContent = currentStep;
+
+  document.getElementById('progressFill').style.width = progressSteps[currentStep - 1];
+  document.getElementById('progressCount').textContent = `STEP ${currentStep} OF ${totalSteps}`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setFieldErr(inputId, errId, hasErr) {
+  const el = document.getElementById(inputId);
+  const msg = document.getElementById(errId);
+  if (el) { hasErr ? el.classList.add('error') : el.classList.remove('error'); }
+  if (msg) { hasErr ? msg.classList.add('show') : msg.classList.remove('show'); }
+}
+
+function showErr(errId, show) {
+  const el = document.getElementById(errId);
+  if (el) { show ? el.classList.add('show') : el.classList.remove('show'); }
+}
+
+function validate(step) {
+  let ok = true;
+
+  if (step === 1) {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const age = document.getElementById('age').value.trim();
+    const gender = document.getElementById('gender').value;
+    const location = document.getElementById('location').value.trim();
+    const referral = document.getElementById('referral').value;
+
+    setFieldErr('name','nameErr', !name); if (!name) ok = false;
+    setFieldErr('email','emailErr', !email || !email.includes('@')); if (!email || !email.includes('@')) ok = false;
+    setFieldErr('age','ageErr', !age); if (!age) ok = false;
+    setFieldErr('gender','genderErr', !gender); if (!gender) ok = false;
+    setFieldErr('location','locationErr', !location); if (!location) ok = false;
+    setFieldErr('referral','referralErr', !referral); if (!referral) ok = false;
+  }
+
+  if (step === 2) {
+    const goal = document.querySelector('input[name="goal"]:checked');
+    const goalDesc = document.getElementById('goalDesc').value.trim();
+    const exp = document.querySelector('input[name="exp"]:checked');
+    const blocker = document.getElementById('blocker').value.trim();
+
+    showErr('goalErr', !goal); if (!goal) ok = false;
+    setFieldErr('goalDesc','goalDescErr', !goalDesc); if (!goalDesc) ok = false;
+    showErr('expErr', !exp); if (!exp) ok = false;
+    setFieldErr('blocker','blockerErr', !blocker); if (!blocker) ok = false;
+  }
+
+  if (step === 3) {
+    const health = document.querySelector('input[name="health"]:checked');
+    showErr('healthErr', !health); if (!health) ok = false;
+  }
+
+  if (step === 4) {
+    const routine = document.getElementById('routine').value.trim();
+    const nutrition = document.getElementById('nutrition').value.trim();
+    setFieldErr('routine','routineErr', !routine); if (!routine) ok = false;
+    setFieldErr('nutrition','nutritionErr', !nutrition); if (!nutrition) ok = false;
+  }
+
+  return ok;
+}
+
+async function submitForm() {
+  if (!validate(4)) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'SUBMITTING...';
+
+  const data = {
+    name: document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    age: document.getElementById('age').value.trim(),
+    gender: document.getElementById('gender').value,
+    location: document.getElementById('location').value.trim(),
+    referral: document.getElementById('referral').value,
+    goal: document.querySelector('input[name="goal"]:checked')?.value || '',
+    goal_description: document.getElementById('goalDesc').value.trim(),
+    experience: document.querySelector('input[name="exp"]:checked')?.value || '',
+    blocker: document.getElementById('blocker').value.trim(),
+    health_status: document.querySelector('input[name="health"]:checked')?.value || '',
+    injuries: document.getElementById('injuries').value.trim() || 'None',
+    sleep: document.getElementById('sleep').value || 'Not specified',
+    stress: document.getElementById('stress').value || 'Not specified',
+    health_notes: document.getElementById('healthNotes').value.trim() || 'None',
+    routine: document.getElementById('routine').value.trim(),
+    nutrition: document.getElementById('nutrition').value.trim(),
+    supplements_protocols: document.getElementById('supplements').value.trim() || 'None',
+    extra_notes: document.getElementById('extraNotes').value.trim() || 'None',
+    source: 'HollyFit Intake Form',
+    submitted_at: new Date().toISOString(),
+    tasks: [
+      'Send About the Coach email to client',
+      'Add client to 1Fit App',
+      'Create UPS Shipment'
+    ]
+  };
+
+  const MAKE_WEBHOOK = "https://hook.us1.make.com/YOUR_WEBHOOK_ID_HERE";
+  try {
+    await fetch(MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch(e) { console.error('Webhook error:', e); }
+
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('section4').classList.remove('active');
+  document.getElementById('successName').textContent = data.name.split(' ')[0];
+  document.getElementById('successScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  console.log('Submitted:', data);
+}
+</script>
+</body>
+</html>
