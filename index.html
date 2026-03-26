@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HollyFit</title>
+<style>
+body{font-family:Arial;background:#0a0a0f;color:#fff;margin:0}
+.page{display:none;padding:40px}
+.page.active{display:block}
+button{cursor:pointer}
+
+.lt-card{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:15px;
+  background:#13131d;
+  border:1px solid #1f1f30;
+  border-radius:10px;
+  color:#fff;
+}
+
+</style>
+</head>
+<body>
+
+<div id="page-home" class="page active">
+  <h1>HollyFit</h1>
+
+  <button class="lt-card" onclick="handleNav(event,'page-bot')">Start Here (Bot)</button>
+  <button class="lt-card" onclick="handleNav(event,'page-form')">Application Form</button>
+  <button class="lt-card" onclick="handleNav(event,'page-program')">Program</button>
+  <button class="lt-card" onclick="handleNav(event,'page-results')">Results</button>
+</div>
+
+<div id="page-bot" class="page">
+  <button onclick="handleNav(event,'page-home')">← Back</button>
+  <h2>Bot Page</h2>
+</div>
+
+<div id="page-form" class="page">
+  <button onclick="handleNav(event,'page-home')">← Back</button>
+  <h2>Form Page</h2>
+</div>
+
+<div id="page-program" class="page">
+  <button onclick="handleNav(event,'page-home')">← Back</button>
+  <h2>Program Page</h2>
+</div>
+
+<div id="page-results" class="page">
+  <button onclick="handleNav(event,'page-home')">← Back</button>
+  <h2>Results Page</h2>
+</div>
+
+<script>
+function handleNav(e,pageId){
+  e.preventDefault();
+  e.stopPropagation();
+  goTo(pageId);
+}
+
+function goTo(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
