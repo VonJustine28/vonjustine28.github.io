@@ -1,0 +1,68 @@
+<!-- ONLY showing key changes + structure (your full code stays the same) -->
+
+<!-- 🔥 CHANGE ALL CLICKABLE DIVS -->
+<!-- BEFORE -->
+<div class="lt-card hero" onclick="goTo('page-bot')">
+
+<!-- AFTER -->
+<button class="lt-card hero" onclick="handleNav(event, 'page-bot')">
+
+
+<!-- DO THIS FOR ALL -->
+<button class="lt-card" onclick="handleNav(event, 'page-form')">
+<button class="lt-card" onclick="handleNav(event, 'page-program')">
+<button class="lt-card" onclick="handleNav(event, 'page-results')">
+
+
+<!-- 🔥 ADD THIS CSS -->
+<style>
+button.lt-card {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  cursor: pointer;
+}
+</style>
+
+
+<!-- 🔥 REPLACE YOUR ROUTER FUNCTION -->
+<script>
+function handleNav(e, pageId) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  goTo(pageId);
+}
+
+function goTo(pageId) {
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.remove('active');
+  });
+
+  var target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0, 0);
+
+    // update URL (no reload)
+    history.pushState({ page: pageId }, "", "#" + pageId);
+  }
+
+  if (pageId === 'page-bot' && !botReady) startBot();
+}
+
+/* 🔥 ENABLE DIRECT LINKS */
+window.addEventListener("load", function () {
+  var hash = window.location.hash.replace("#", "");
+  if (hash) goTo(hash);
+});
+
+window.addEventListener("popstate", function (e) {
+  if (e.state && e.state.page) {
+    goTo(e.state.page);
+  }
+});
+</script>
